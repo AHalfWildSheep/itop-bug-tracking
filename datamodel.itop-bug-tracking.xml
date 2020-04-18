@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <classes>
+    <class id="Bug" _created_in="itop-tickets" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>bug</db_table>
+        <icon>
+          <fileref ref="icons8-bug-48_1806ee5c4b3518c2f68f392c0865042e"/>
+        </icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="reference"/>
+          </attributes>
+        </reconciliation>
+        <naming>
+          <attributes>
+            <attribute id="reference"/>
+            <attribute id="summary"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="summary" xsi:type="AttributeString">
+          <sql>summary</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="reference" xsi:type="AttributeString">
+          <sql>reference</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="new">new</value>
+            <value id="confirmed">confirmed</value>
+            <value id="inprogress">inprogress</value>
+            <value id="resolved">resolved</value>
+            <value id="unconfirmed">unconfirmed</value>
+            <value id="closed">closed</value>
+          </values>
+          <default_value>new</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies>
+            <attribute id="reference"/>
+          </dependencies>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter>SELECT Product WHERE status = 'active'</filter>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Product</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="component_id" xsi:type="AttributeExternalKey">
+          <sql>component_id</sql>
+          <filter>SELECT Component WHERE product_id = :this-&gt;product_id</filter>
+          <dependencies>
+            <attribute id="product_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Component</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="version" xsi:type="AttributeTagSet">
+          <sql>version</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <max_items/>
+          <tag_code_max_len/>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="p1">p1</value>
+            <value id="p2">p2</value>
+            <value id="p3">p3</value>
+            <value id="p4">p4</value>
+          </values>
+          <default_value>p4</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="severity" xsi:type="AttributeEnum">
+          <sql>severity</sql>
+          <values>
+            <value id="s1">s1</value>
+            <value id="s2">s2</value>
+            <value id="s3">s3</value>
+            <value id="s4">s4</value>
+          </values>
+          <default_value>s4</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="target_version" xsi:type="AttributeString">
+          <sql>target_version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <sql>team_id</sql>
+          <filter>SELECT Team WHERE status='active'</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Team</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="assigned_to" xsi:type="AttributeExternalKey">
+          <sql>assigned_to</sql>
+          <filter>SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;team_id</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="domains" xsi:type="AttributeTagSet">
+          <sql>domains</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <max_items/>
+          <tag_code_max_len/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="parent_bug_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_bug_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="reported_by" xsi:type="AttributeExternalKey">
+          <sql>reported_by</sql>
+          <filter>SELECT Person WHERE status='active'</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="bug_log" xsi:type="AttributeCaseLog">
+          <sql>bug_log</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="creation_date" xsi:type="AttributeDateTime">
+          <sql>creation_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="update_date" xsi:type="AttributeDateTime">
+          <sql>update_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="resolve_code" xsi:type="AttributeEnum">
+          <sql>resolve_code</sql>
+          <values>
+            <value id="fixed">fixed</value>
+            <value id="duplicate">duplicate</value>
+            <value id="wontfix">wontfix</value>
+            <value id="notreproduced">notreproduced</value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods>
+        <method id="DBInsertNoReload">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[    public function DBInsertNoReload()
+    {
+          $iNextId = ItopCounter::IncClass(get_class($this));
+          $sRef = $this->MakeBugReference($iNextId);
+          $this->SetIfNull('reference', $sRef);
+          $iKey = parent::DBInsertNoReload();
+          return $iKey;
+    }]]></code>
+        </method>
+        <method id="MakeBugReference">
+          <static>true</static>
+          <access>public </access>
+          <code><![CDATA[        public static function MakeBugReference($iNextId)
+        {
+            return sprintf(static::GetBugReferenceFormat(), $iNextId);
+        }]]></code>
+        </method>
+        <method id="GetBugReferenceFormat">
+          <static>true</static>
+          <access>public </access>
+          <code><![CDATA[	public static function GetBugReferenceFormat()
+	{
+		return 'B-d';
+	}]]></code>
+        </method>
+        <method id="OnInsert">
+          <static>false</static>
+          <access>protected </access>
+          <code><![CDATA[    protected function OnInsert()
+	{
+        parent::OnInsert();
+        $currentDate = time();
+		$this->SetIfNull('update_date', $currentDate);
+		$this->SetIfNull('creation_date', $currentDate);
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function OnUpdate()
+	{
+		$this->Set('update_date', time());
+	}]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+        parent::DoCheckToWrite();
+        if (!$this->IsNew() && ($this->Get('parent_bug_id') == $this->GetKey()))
+        {
+          $this->m_aCheckIssues[] = Dict::Format('Class:Bug/Error:CannotAssignParentBugIdToSelf');
+        }	
+	}]]></code>
+        </method>
+        <method id="PrefillCreationForm">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function PrefillCreationForm(&$value)
+	{
+	    $sDescriptionContent = "<strong> Short summary: </strong> <br/><br/><strong> Steps to reproduce: </strong> <br/><br/><strong> Expected results: </strong> <br/><br/><strong> Actual Results: </strong> <br/><br/> <strong> Notes: </strong>  <br/><br/>";
+	    $this->Set('description', $sDescriptionContent);
+	    return true;
+	}]]></code>
+          <arguments>
+            <argument id="1">
+              <mandatory>false</mandatory>
+              <type>reference</type>
+            </argument>
+          </arguments>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[    public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())	{
+		if ($sAttCode == 'update_date' || $sAttCode == 'creation_date')
+		{
+		    return OPT_ATT_HIDDEN;
+		}
+		
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <list>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="product_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="reference">
+              <rank>20</rank>
+            </item>
+            <item id="product_id">
+              <rank>30</rank>
+            </item>
+            <item id="target_version">
+              <rank>40</rank>
+            </item>
+            <item id="assigned_to">
+              <rank>50</rank>
+            </item>
+            <item id="domains">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:BugDetails">
+                  <items>
+                    <item id="summary">
+                      <rank>10</rank>
+                    </item>
+                    <item id="reference">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="reported_by">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:BugProductDetails">
+                  <items>
+                    <item id="product_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="component_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="version">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="priority">
+                  <rank>10</rank>
+                </item>
+                <item id="severity">
+                  <rank>20</rank>
+                </item>
+                <item id="domains">
+                  <rank>30</rank>
+                </item>
+                <item id="target_version">
+                  <rank>40</rank>
+                </item>
+                <item id="team_id">
+                  <rank>50</rank>
+                </item>
+                <item id="assigned_to">
+                  <rank>60</rank>
+                </item>
+                <item id="parent_bug_id">
+                  <rank>70</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="creation_date">
+              <rank>30</rank>
+            </item>
+            <item id="update_date">
+              <rank>40</rank>
+            </item>
+            <item id="resolve_code">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="assigned_to">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+      <lifecycle>
+        <attribute>status</attribute>
+        <stimuli>
+          <stimulus id="acknowledge" xsi:type="StimulusUserAction"/>
+          <stimulus id="confirm" xsi:type="StimulusUserAction"/>
+          <stimulus id="start_working" xsi:type="StimulusUserAction"/>
+          <stimulus id="stop_working" xsi:type="StimulusUserAction"/>
+          <stimulus id="resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="unconfirm" xsi:type="StimulusUserAction"/>
+          <stimulus id="reopen" xsi:type="StimulusUserAction"/>
+          <stimulus id="close" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="new">
+            <flags>
+              <attribute id="assigned_to">
+                <hidden/>
+              </attribute>
+              <attribute id="reference">
+                <hidden/>
+              </attribute>
+              <attribute id="team_id">
+                <hidden/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="acknowledge">
+                <stimulus>acknowledge</stimulus>
+                <target>unconfirmed</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="confirmed">
+            <flags>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="unconfirm">
+                <stimulus>unconfirm</stimulus>
+                <target>unconfirmed</target>
+                <actions/>
+              </transition>
+              <transition id="start_working">
+                <stimulus>start_working</stimulus>
+                <target>inprogress</target>
+                <actions/>
+              </transition>
+              <transition id="resolve">
+                <stimulus>resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="inprogress">
+            <flags>
+              <attribute id="target_version">
+                <mandatory/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="stop_working">
+                <stimulus>stop_working</stimulus>
+                <target>confirmed</target>
+                <actions/>
+              </transition>
+              <transition id="resolve">
+                <stimulus>resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <flags>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="reopen">
+                <stimulus>reopen</stimulus>
+                <target>unconfirmed</target>
+                <actions/>
+              </transition>
+              <transition id="close">
+                <stimulus>close</stimulus>
+                <target>closed</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="unconfirmed">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <must_prompt/>
+              </attribute>
+              <attribute id="assigned_to">
+                <must_prompt/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="confirm">
+                <stimulus>confirm</stimulus>
+                <target>confirmed</target>
+                <actions/>
+              </transition>
+              <transition id="resolve">
+                <stimulus>resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="reopen">
+                <stimulus>reopen</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+        </states>
+      </lifecycle>
+    </class>
+    <class id="Product" _created_in="itop-tickets" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>product</db_table>
+        <icon>
+          <fileref ref="icons8-application-window-48_9655e84f5992b7d45f4f5888bb6b84d5"/>
+        </icon>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="desription" xsi:type="AttributeHTML">
+          <sql>desription</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="desription">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="Component" _created_in="itop-tickets" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>component</db_table>
+        <icon>
+          <fileref ref="icons8-blockly-blue-48_239c2826a0b3e8adc019e607f1b5b48c"/>
+        </icon>
+      </properties>
+      <fields>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Product</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeString">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="product_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <menus>
+    <menu xsi:type="MenuGroup" id="bug_mgmt" _created_in="itop-welcome-itil" _delta="define">
+      <rank>101</rank>
+      <enable_class>Bug</enable_class>
+      <enable_action>UR_ACTION_READ</enable_action>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="new_bug" _created_in="itop-welcome-itil" _delta="define">
+      <parent>bug_mgmt</parent>
+      <rank>0</rank>
+      <class>Bug</class>
+    </menu>
+    <menu xsi:type="DashboardMenuNode" id="bug_overview" _created_in="itop-welcome-itil" _delta="define">
+      <parent>bug_mgmt</parent>
+      <rank>1</rank>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells/>
+      </definition>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="bug_list" _created_in="itop-welcome-itil" _delta="define">
+      <parent>bug_mgmt</parent>
+      <rank>0</rank>
+      <class>Bug</class>
+    </menu>
+  </menus>
+  <files>
+    <file id="icons8-bug-48_1806ee5c4b3518c2f68f392c0865042e" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-bug-48.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>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</data>
+    </file>
+    <file id="icons8-application-window-48_9655e84f5992b7d45f4f5888bb6b84d5" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-application-window-48.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAzElEQVRoge3ZoQ3CQBhAYY6AQDIIC6BQCPbAExQjoAiePRAoFAswCBKBOFwd4i6Eo+9/n2qaNu3Ln1yaXso5DyIZtn6BXzOYzmA6g+kMpjOYblR6w/r8/KuP79Nqkkqud8ItXO6P7ng5m348dzwsunOb7bXqWeEmHC44lf4AcNHqmepFaz9/ffM9iu1u46r7wk3YYDqD6QymM5jOYDqD6QymM5jOYDqD6QymM5guXHD1VkvtVkdr4SZcvF3ad+EmbDCdwXQG0xlMZzDdGyV2HrhHhXnhAAAAAElFTkSuQmCC</data>
+    </file>
+    <file id="icons8-blockly-blue-48_239c2826a0b3e8adc019e607f1b5b48c" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-blockly-blue-48.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1ElEQVRoge2Zzy4DQRzHv7/tVtPEQQRv4A2cBHsgvIKILQniYAUnR3FyEv/WQZCgJV6BcNiGm0fwBCVuDqrtz4VEiJjZLk1+/X1OO5PJd+aTmczO7hAzo5lwGj2A/0aFpaPC0lFh6aiwdFRYOk0n7CYR4gfRLYDeJLJicpMPvX6ThknNcCNlAaDPtGHTLWkVlo4KS0eFpaPC0jE+Wo4tXnelKu4pgB4QlvI73tHfDetHSszkp+j1rgp3nYBJ2wDjGU5V3S0AQwDawDgcn4umbTurG8ZCYXfg8jgcfOru9KYAHNhGmH88MIY/lRwi7OeCqCP72rqNtG238XCocvnxvLKCGuDN5OaLj8y8aJpBplctfhA1/E4mH3pUb0bTbVoqLB0Vlo6N8OP3Klp+aWnJJjaaX5gIrtu/1uXmi2t+ED2bZpi/hwlXYIy+l2oAz+ZD7wAA/CAyjqmHGrvDAM4BYHUVzv1DtAfA6gBkLFxNVRacSrqdwD0MWiqE3ondcBOAsDU+V3wqZ9J3mfLLBkA52whj4bPNwRKAEdsOEqaLiC8y5TKAeGcQ3bSko8LSUWHpqLB0VDgmNwnlxIPN+zf+pyUFXdLSUWHpqLB0VFg6KiwdFZbOG4babW9hnmSXAAAAAElFTkSuQmCC</data>
+    </file>
+  </files>
+  <user_rights _created_in="core">
+    <profiles>
+      <profile id="15" _delta="define">
+        <name>Bug Manager</name>
+        <description>User can read, track and resolve Bug objects</description>
+        <groups>
+          <group id="Bug">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
+              <action id="stimulus:acknowledge">allow</action>
+              <action id="stimulus:close">allow</action>
+              <action id="stimulus:confirm">allow</action>
+              <action id="stimulus:reopen">allow</action>
+              <action id="stimulus:resolve">allow</action>
+              <action id="stimulus:start_working">allow</action>
+              <action id="stimulus:stop_working">allow</action>
+              <action id="stimulus:unconfirm">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
+    <groups>
+      <group id="Bug" _delta="define">
+        <classes>
+          <class id="Product"/>
+          <class id="Component"/>
+          <class id="Bug"/>
+        </classes>
+      </group>
+    </groups>
+  </user_rights>
+</itop_design>
