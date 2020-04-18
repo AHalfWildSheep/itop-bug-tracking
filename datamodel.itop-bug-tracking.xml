@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
-    <class id="Bug" _created_in="itop-tickets" _delta="define">
+    <class id="Bug" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -579,7 +579,7 @@
         </states>
       </lifecycle>
     </class>
-    <class id="Product" _created_in="itop-tickets" _delta="define">
+    <class id="Product" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -660,7 +660,7 @@
       </presentation>
       <parent>cmdbAbstractObject</parent>
     </class>
-    <class id="Component" _created_in="itop-tickets" _delta="define">
+    <class id="Component" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -741,17 +741,17 @@
     </class>
   </classes>
   <menus>
-    <menu xsi:type="MenuGroup" id="bug_mgmt" _created_in="itop-welcome-itil" _delta="define">
+    <menu xsi:type="MenuGroup" id="bug_mgmt" _delta="define">
       <rank>101</rank>
       <enable_class>Bug</enable_class>
       <enable_action>UR_ACTION_READ</enable_action>
     </menu>
-    <menu xsi:type="NewObjectMenuNode" id="new_bug" _created_in="itop-welcome-itil" _delta="define">
+    <menu xsi:type="NewObjectMenuNode" id="new_bug" _delta="define">
       <parent>bug_mgmt</parent>
       <rank>0</rank>
       <class>Bug</class>
     </menu>
-    <menu xsi:type="DashboardMenuNode" id="bug_overview" _created_in="itop-welcome-itil" _delta="define">
+    <menu xsi:type="DashboardMenuNode" id="bug_overview" _delta="define">
       <parent>bug_mgmt</parent>
       <rank>1</rank>
       <definition>
@@ -764,7 +764,7 @@
         <cells/>
       </definition>
     </menu>
-    <menu xsi:type="SearchMenuNode" id="bug_list" _created_in="itop-welcome-itil" _delta="define">
+    <menu xsi:type="SearchMenuNode" id="bug_list" _delta="define">
       <parent>bug_mgmt</parent>
       <rank>0</rank>
       <class>Bug</class>
@@ -793,9 +793,9 @@
       <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1ElEQVRoge2Zzy4DQRzHv7/tVtPEQQRv4A2cBHsgvIKILQniYAUnR3FyEv/WQZCgJV6BcNiGm0fwBCVuDqrtz4VEiJjZLk1+/X1OO5PJd+aTmczO7hAzo5lwGj2A/0aFpaPC0lFh6aiwdFRYOk0n7CYR4gfRLYDeJLJicpMPvX6ThknNcCNlAaDPtGHTLWkVlo4KS0eFpaPC0jE+Wo4tXnelKu4pgB4QlvI73tHfDetHSszkp+j1rgp3nYBJ2wDjGU5V3S0AQwDawDgcn4umbTurG8ZCYXfg8jgcfOru9KYAHNhGmH88MIY/lRwi7OeCqCP72rqNtG238XCocvnxvLKCGuDN5OaLj8y8aJpBplctfhA1/E4mH3pUb0bTbVoqLB0Vlo6N8OP3Klp+aWnJJjaaX5gIrtu/1uXmi2t+ED2bZpi/hwlXYIy+l2oAz+ZD7wAA/CAyjqmHGrvDAM4BYHUVzv1DtAfA6gBkLFxNVRacSrqdwD0MWiqE3ondcBOAsDU+V3wqZ9J3mfLLBkA52whj4bPNwRKAEdsOEqaLiC8y5TKAeGcQ3bSko8LSUWHpqLB0VDgmNwnlxIPN+zf+pyUFXdLSUWHpqLB0VFg6KiwdFZbOG4babW9hnmSXAAAAAElFTkSuQmCC</data>
     </file>
   </files>
-  <user_rights _created_in="core">
+  <user_rights>
     <profiles>
-      <profile id="15" _delta="define">
+      <profile id="201" _delta="define">
         <name>Bug Manager</name>
         <description>User can read, track and resolve Bug objects</description>
         <groups>
