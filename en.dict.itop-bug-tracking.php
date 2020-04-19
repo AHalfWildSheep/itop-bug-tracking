@@ -1,14 +1,10 @@
 <?php
-/**
- * Localized data
- *
- * @copyright   Copyright (C) 2013 XXXXX
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
 
 Dict::Add('EN US', 'English', 'English', array(
+	
+		//Bug class
         "Class:Bug" => "Bug",
-        "Class:Bug+" => "Sometimes an insect, sometimes  a headache",
+        "Class:Bug+" => "Defect, enhencement or new feature for a product",
         "Class:Bug/Attribute:summary" => "Summary",
         "Class:Bug/Attribute:summary+" => "A one sentence summery of the problem",
         "Class:Bug/Attribute:reference" => "Reference",
@@ -83,8 +79,16 @@ Dict::Add('EN US', 'English', 'English', array(
         "Menu:new_bug" => "New bug",
         "Menu:bug_overview" => "Bug Overview",
         "Menu:bug_list" => "Search for Bugs",
-        "Class:Bug/Attribute:resolve_code" => "Resolve code",
-        "Class:Bug/Attribute:resolve_code+"  => "",
-        "Class:Bug/Name"  => "%1$s%2$s",
+        "Class:Bug/Attribute:resolution_code" => "Resolution code",
+        "Class:Bug/Attribute:resolution_code+"  => "",
+        "Class:Bug/Name"  => '%1$s%2$s',
+		"Class:Bug/Warning:Duplicate"  => '%1$s is a potential duplicate.',
+		
+		"BugDetails" => 'Details',
+		"BugProductDetails" => 'Product details',
+		"BugMeasures" => 'Measures',
+		"BugResolution" => 'Resolution',
+		"BugHistory" => 'History',
+	
 ));
 ?>

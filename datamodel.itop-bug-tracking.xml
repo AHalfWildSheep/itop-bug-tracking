@@ -109,11 +109,11 @@
           <dependencies/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="target_version" xsi:type="AttributeString">
+        <field id="target_version" xsi:type="AttributeTagSet">
           <sql>target_version</sql>
-          <default_value/>
           <is_null_allowed>true</is_null_allowed>
-          <validation_pattern/>
+          <max_items/>
+          <tag_code_max_len/>
           <tracking_level>all</tracking_level>
         </field>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -162,7 +162,7 @@
           <sql>reported_by</sql>
           <filter>SELECT Person WHERE status='active'</filter>
           <dependencies/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
           <target_class>Person</target_class>
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
@@ -185,8 +185,8 @@
           <is_null_allowed>true</is_null_allowed>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="resolve_code" xsi:type="AttributeEnum">
-          <sql>resolve_code</sql>
+        <field id="resolution_code" xsi:type="AttributeEnum">
+          <sql>resolution_code</sql>
           <values>
             <value id="fixed">fixed</value>
             <value id="duplicate">duplicate</value>
@@ -226,7 +226,7 @@
           <access>public </access>
           <code><![CDATA[	public static function GetBugReferenceFormat()
 	{
-		return 'B-d';
+		return 'B-%d';
 	}]]></code>
         </method>
         <method id="OnInsert">
@@ -254,10 +254,34 @@
           <code><![CDATA[	public function DoCheckToWrite()
 	{
         parent::DoCheckToWrite();
+        
+        // Can't have itself as parent
         if (!$this->IsNew() && ($this->Get('parent_bug_id') == $this->GetKey()))
         {
           $this->m_aCheckIssues[] = Dict::Format('Class:Bug/Error:CannotAssignParentBugIdToSelf');
         }	
+        // Check duplicates on creation
+        $bCheckDuplicates = true;
+        if($bCheckDuplicates && $this->IsNew())
+        {
+            $aDuplicateParams = MetaModel::GetConfig()->GetModuleSetting('itop-bug-tracking', 'duplicate_params');
+			$aColumns = array();
+			foreach ($aDuplicateParams as $sColumn => $sParams)
+			{
+				$aColumns[$sColumn] = $this->Get($sColumn);
+			}
+          $aRes = iTop\BugTracking\Duplicate\DuplicateFinder::getDuplicateBugs($aColumns);
+          if(!empty($aRes))
+          {
+            foreach($aRes as $aDuplicate)
+            {
+              $oDuplicateObj = MetaModel::GetObject(get_class($this), $aDuplicate['id']);
+			        $sWarning = Dict::Format("Class:Bug/Warning:Duplicate",$oDuplicateObj->GetHyperLink(null, null, Utils::HtmlEntities($oDuplicateObj->Get('friendlyname'))));
+              $this->m_aCheckWarnings[] = $sWarning;
+            }
+          }
+        }
+        
 	}]]></code>
         </method>
         <method id="PrefillCreationForm">
@@ -367,39 +391,53 @@
               <rank>10</rank>
             </item>
             <item id="col:col1">
-              <items>
-                <item id="priority">
+               <items>
+                <item id="fieldset:BugMeasures">
+                  <items>
+                    <item id="priority">
+                      <rank>10</rank>
+                    </item>
+                    <item id="severity">
+                      <rank>20</rank>
+                    </item>
+                    <item id="domains">
+                      <rank>30</rank>
+                    </item>
+                  </items>
                   <rank>10</rank>
-                </item>
-                <item id="severity">
-                  <rank>20</rank>
-                </item>
-                <item id="domains">
-                  <rank>30</rank>
-                </item>
-                <item id="target_version">
-                  <rank>40</rank>
-                </item>
-                <item id="team_id">
-                  <rank>50</rank>
-                </item>
-                <item id="assigned_to">
-                  <rank>60</rank>
-                </item>
-                <item id="parent_bug_id">
-                  <rank>70</rank>
-                </item>
-              </items>
+                 </item>
+                 <item id="fieldset:BugResolution">
+                  <items>
+                    <item id="target_version">
+                      <rank>10</rank>
+                    </item>
+                    <item id="team_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="assigned_to">
+                      <rank>30</rank>
+                    </item>
+                    <item id="resolution_code">
+                      <rank>40</rank>
+                    </item>
+                    <item id="parent_bug_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                   <rank>20</rank>
+                 </item>
+                  <item id="fieldset:BugHistory">
+                  <items>
+                    <item id="creation_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="update_date">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  </item> 
+               </items>
               <rank>20</rank>
-            </item>
-            <item id="creation_date">
-              <rank>30</rank>
-            </item>
-            <item id="update_date">
-              <rank>40</rank>
-            </item>
-            <item id="resolve_code">
-              <rank>50</rank>
             </item>
           </items>
         </details>
