@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="Bug" _delta="define">
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <db_table>bug</db_table>
-        <icon>
-          <fileref ref="icons8-bug-48_1806ee5c4b3518c2f68f392c0865042e"/>
-        </icon>
+        <style>
+          <icon>
+            <fileref ref="icons8-website-bug-144_c74d6482698346d5ecf39eb28b5c52c0"/>
+          </icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="reference"/>
@@ -20,6 +22,9 @@
             <attribute id="summary"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
       </properties>
       <fields>
         <field id="summary" xsi:type="AttributeString">
@@ -34,18 +39,64 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <validation_pattern/>
-          <tracking_level>all</tracking_level>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <sql>status</sql>
           <values>
-            <value id="new">new</value>
-            <value id="confirmed">confirmed</value>
-            <value id="inprogress">inprogress</value>
-            <value id="resolved">resolved</value>
-            <value id="unconfirmed">unconfirmed</value>
-            <value id="closed">closed</value>
+            <value id="new">
+              <code>new</code>
+              <style>
+                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="confirmed">
+              <code>confirmed</code>
+              <style>
+                <main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-check</decoration_classes>
+              </style>
+            </value>
+            <value id="inprogress">
+              <code>inprogress</code>
+              <style>
+                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-play</decoration_classes>
+              </style>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+              <style>
+                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-check-double</decoration_classes>
+              </style>
+            </value>
+            <value id="unconfirmed">
+              <code>unconfirmed</code>
+              <style>
+                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-question</decoration_classes>
+              </style>
+            </value>
+            <value id="closed">
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+              </style>
+              <code>closed</code>
+            </value>
           </values>
+          <default_style>
+            <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+            <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+            <decoration_classes/>
+          </default_style>
           <default_value>new</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
@@ -84,10 +135,18 @@
         <field id="priority" xsi:type="AttributeEnum">
           <sql>priority</sql>
           <values>
-            <value id="p1">p1</value>
-            <value id="p2">p2</value>
-            <value id="p3">p3</value>
-            <value id="p4">p4</value>
+            <value id="p1">
+              <code>p1</code>
+            </value>
+            <value id="p2">
+              <code>p2</code>
+            </value>
+            <value id="p3">
+              <code>p3</code>
+            </value>
+            <value id="p4">
+              <code>p4</code>
+            </value>
           </values>
           <default_value>p4</default_value>
           <is_null_allowed>true</is_null_allowed>
@@ -98,22 +157,23 @@
         <field id="severity" xsi:type="AttributeEnum">
           <sql>severity</sql>
           <values>
-            <value id="s1">s1</value>
-            <value id="s2">s2</value>
-            <value id="s3">s3</value>
-            <value id="s4">s4</value>
+            <value id="s1">
+              <code>s1</code>
+            </value>
+            <value id="s2">
+              <code>s2</code>
+            </value>
+            <value id="s3">
+              <code>s3</code>
+            </value>
+            <value id="s4">
+              <code>s4</code>
+            </value>
           </values>
           <default_value>s4</default_value>
           <is_null_allowed>true</is_null_allowed>
           <display_style/>
           <dependencies/>
-          <tracking_level>all</tracking_level>
-        </field>
-        <field id="target_version" xsi:type="AttributeTagSet">
-          <sql>target_version</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <max_items/>
-          <tag_code_max_len/>
           <tracking_level>all</tracking_level>
         </field>
         <field id="team_id" xsi:type="AttributeExternalKey">
@@ -141,13 +201,6 @@
           <validation_pattern/>
           <width/>
           <height/>
-          <tracking_level>all</tracking_level>
-        </field>
-        <field id="domains" xsi:type="AttributeTagSet">
-          <sql>domains</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <max_items/>
-          <tag_code_max_len/>
           <tracking_level>all</tracking_level>
         </field>
         <field id="parent_bug_id" xsi:type="AttributeHierarchicalKey">
@@ -188,15 +241,41 @@
         <field id="resolution_code" xsi:type="AttributeEnum">
           <sql>resolution_code</sql>
           <values>
-            <value id="fixed">fixed</value>
-            <value id="duplicate">duplicate</value>
-            <value id="wontfix">wontfix</value>
-            <value id="notreproduced">notreproduced</value>
+            <value id="fixed">
+              <code>fixed</code>
+            </value>
+            <value id="duplicate">
+              <code>duplicate</code>
+            </value>
+            <value id="wontfix">
+              <code>wontfix</code>
+            </value>
+            <value id="notreproduced">
+              <code>notreproduced</code>
+            </value>
           </values>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style/>
           <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="keywords" xsi:type="AttributeTagSet">
+          <sql>keywords</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <max_items/>
+          <tag_code_max_len/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="milestone_id" xsi:type="AttributeExternalKey">
+          <sql>milestone_id</sql>
+          <filter>SELECT Milestone WHERE product_id = :this-&gt;product_id</filter>
+          <dependencies>
+            <attribute id="product_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Milestone</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
       </fields>
@@ -250,7 +329,7 @@
         </method>
         <method id="DoCheckToWrite">
           <static>false</static>
-          <access>public </access>
+          <access>public</access>
           <code><![CDATA[	public function DoCheckToWrite()
 	{
         parent::DoCheckToWrite();
@@ -260,28 +339,6 @@
         {
           $this->m_aCheckIssues[] = Dict::Format('Class:Bug/Error:CannotAssignParentBugIdToSelf');
         }	
-        // Check duplicates on creation
-        $bCheckDuplicates = true;
-        if($bCheckDuplicates && $this->IsNew())
-        {
-            $aDuplicateParams = MetaModel::GetConfig()->GetModuleSetting('itop-bug-tracking', 'duplicate_params');
-			$aColumns = array();
-			foreach ($aDuplicateParams as $sColumn => $sParams)
-			{
-				$aColumns[$sColumn] = $this->Get($sColumn);
-			}
-          $aRes = iTop\BugTracking\Duplicate\DuplicateFinder::getDuplicateBugs($aColumns);
-          if(!empty($aRes))
-          {
-            foreach($aRes as $aDuplicate)
-            {
-              $oDuplicateObj = MetaModel::GetObject(get_class($this), $aDuplicate['id']);
-			        $sWarning = Dict::Format("Class:Bug/Warning:Duplicate",$oDuplicateObj->GetHyperLink(null, null, Utils::HtmlEntities($oDuplicateObj->Get('friendlyname'))));
-              $this->m_aCheckWarnings[] = $sWarning;
-            }
-          }
-        }
-        
 	}]]></code>
         </method>
         <method id="PrefillCreationForm">
@@ -338,14 +395,8 @@
             <item id="product_id">
               <rank>30</rank>
             </item>
-            <item id="target_version">
-              <rank>40</rank>
-            </item>
             <item id="assigned_to">
-              <rank>50</rank>
-            </item>
-            <item id="domains">
-              <rank>60</rank>
+              <rank>40</rank>
             </item>
           </items>
         </search>
@@ -367,8 +418,11 @@
                     <item id="reported_by">
                       <rank>40</rank>
                     </item>
-                    <item id="description">
+                    <item id="keywords">
                       <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -391,7 +445,7 @@
               <rank>10</rank>
             </item>
             <item id="col:col1">
-               <items>
+              <items>
                 <item id="fieldset:BugMeasures">
                   <items>
                     <item id="priority">
@@ -400,33 +454,30 @@
                     <item id="severity">
                       <rank>20</rank>
                     </item>
-                    <item id="domains">
+                    <item id="milestone_id">
                       <rank>30</rank>
+                    </item>
+                    <item id="parent_bug_id">
+                      <rank>40</rank>
                     </item>
                   </items>
                   <rank>10</rank>
-                 </item>
-                 <item id="fieldset:BugResolution">
+                </item>
+                <item id="fieldset:BugResolution">
                   <items>
-                    <item id="target_version">
+                    <item id="team_id">
                       <rank>10</rank>
                     </item>
-                    <item id="team_id">
+                    <item id="assigned_to">
                       <rank>20</rank>
                     </item>
-                    <item id="assigned_to">
+                    <item id="resolution_code">
                       <rank>30</rank>
                     </item>
-                    <item id="resolution_code">
-                      <rank>40</rank>
-                    </item>
-                    <item id="parent_bug_id">
-                      <rank>50</rank>
-                    </item>
                   </items>
-                   <rank>20</rank>
-                 </item>
-                  <item id="fieldset:BugHistory">
+                  <rank>20</rank>
+                </item>
+                <item id="fieldset:BugHistory">
                   <items>
                     <item id="creation_date">
                       <rank>10</rank>
@@ -435,8 +486,9 @@
                       <rank>20</rank>
                     </item>
                   </items>
-                  </item> 
-               </items>
+                  <rank>30</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
           </items>
@@ -454,7 +506,6 @@
       </presentation>
       <parent>cmdbAbstractObject</parent>
       <lifecycle>
-        <attribute>status</attribute>
         <stimuli>
           <stimulus id="acknowledge" xsi:type="StimulusUserAction"/>
           <stimulus id="confirm" xsi:type="StimulusUserAction"/>
@@ -478,10 +529,16 @@
                 <hidden/>
               </attribute>
               <attribute id="creation_date">
-                <read_only/>
+                <hidden/>
               </attribute>
               <attribute id="update_date">
-                <read_only/>
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="milestone_id">
+                <hidden/>
               </attribute>
             </flags>
             <transitions>
@@ -494,11 +551,17 @@
           </state>
           <state id="confirmed">
             <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
               <attribute id="update_date">
                 <read_only/>
               </attribute>
               <attribute id="creation_date">
                 <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
               </attribute>
             </flags>
             <transitions>
@@ -521,14 +584,17 @@
           </state>
           <state id="inprogress">
             <flags>
-              <attribute id="target_version">
-                <mandatory/>
+              <attribute id="reference">
+                <read_only/>
               </attribute>
               <attribute id="update_date">
                 <read_only/>
               </attribute>
               <attribute id="creation_date">
                 <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
               </attribute>
             </flags>
             <transitions>
@@ -546,6 +612,9 @@
           </state>
           <state id="resolved">
             <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
               <attribute id="update_date">
                 <read_only/>
               </attribute>
@@ -599,6 +668,9 @@
           </state>
           <state id="closed">
             <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
               <attribute id="update_date">
                 <read_only/>
               </attribute>
@@ -622,16 +694,22 @@
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <db_table>product</db_table>
-        <icon>
-          <fileref ref="icons8-application-window-48_9655e84f5992b7d45f4f5888bb6b84d5"/>
-        </icon>
+        <style>
+          <icon>
+            <fileref ref="icons8-application-window-144_cabf96ef9addbedde6b81e6f20cc423d"/>
+          </icon>
+        </style>
       </properties>
       <fields>
         <field id="status" xsi:type="AttributeEnum">
           <sql>status</sql>
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+            </value>
           </values>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
@@ -655,6 +733,13 @@
           <height/>
           <tracking_level>all</tracking_level>
         </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -665,6 +750,9 @@
             </item>
             <item id="status">
               <rank>20</rank>
+            </item>
+            <item id="version">
+              <rank>30</rank>
             </item>
           </items>
         </list>
@@ -677,14 +765,22 @@
         </search>
         <details>
           <items>
-            <item id="status">
+            <item id="col:col0">
+              <items>
+                <item id="name">
+                  <rank>10</rank>
+                </item>
+                <item id="version">
+                  <rank>20</rank>
+                </item>
+                <item id="status">
+                  <rank>30</rank>
+                </item>
+                <item id="desription">
+                  <rank>40</rank>
+                </item>
+              </items>
               <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-            <item id="desription">
-              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -703,9 +799,11 @@
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <db_table>component</db_table>
-        <icon>
-          <fileref ref="icons8-blockly-blue-48_239c2826a0b3e8adc019e607f1b5b48c"/>
-        </icon>
+        <style>
+          <icon>
+            <fileref ref="icons8-module-144_4975b5c679bd0923c6e8cda9b53bd3d0"/>
+          </icon>
+        </style>
       </properties>
       <fields>
         <field id="product_id" xsi:type="AttributeExternalKey">
@@ -724,12 +822,14 @@
           <validation_pattern/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="description" xsi:type="AttributeString">
+        <field id="description" xsi:type="AttributeHTML">
           <sql>description</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <validation_pattern/>
           <tracking_level>all</tracking_level>
+          <width/>
+          <height/>
         </field>
       </fields>
       <methods/>
@@ -753,14 +853,19 @@
         </search>
         <details>
           <items>
-            <item id="product_id">
+            <item id="col:col0">
+              <items>
+                <item id="name">
+                  <rank>10</rank>
+                </item>
+                <item id="product_id">
+                  <rank>20</rank>
+                </item>
+                <item id="description">
+                  <rank>30</rank>
+                </item>
+              </items>
               <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-            <item id="description">
-              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -777,20 +882,107 @@
       </presentation>
       <parent>cmdbAbstractObject</parent>
     </class>
+    <class id="Milestone" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>milestone</db_table>
+        <style>
+          <icon>
+            <fileref ref="icons8-anchor-nodes-144_bbe34611b0b651dda48a98a5a71fd67c"/>
+          </icon>
+        </style>
+      </properties>
+      <fields>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Product</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="version" xsi:type="AttributeString">
+          <sql>version</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="product_id">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="product_id">
+                  <rank>10</rank>
+                </item>
+                <item id="version">
+                  <rank>20</rank>
+                </item>
+                <item id="description">
+                  <rank>30</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="product_id">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
   </classes>
   <menus>
-    <menu xsi:type="MenuGroup" id="bug_mgmt" _delta="define">
-      <rank>101</rank>
+    <menu xsi:type="MenuGroup" id="Bug:Mgmt" _delta="define">
+      <rank>66</rank>
       <enable_class>Bug</enable_class>
       <enable_action>UR_ACTION_READ</enable_action>
+      <style>
+        <decoration_classes>fas fa-bug</decoration_classes>
+      </style>
     </menu>
-    <menu xsi:type="NewObjectMenuNode" id="new_bug" _delta="define">
-      <parent>bug_mgmt</parent>
+    <menu xsi:type="NewObjectMenuNode" id="Bug:New" _delta="define">
+      <parent>Bug:Shortcuts</parent>
       <rank>0</rank>
       <class>Bug</class>
+      <enable_class>Bug</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_admin_only>0</enable_admin_only>
     </menu>
-    <menu xsi:type="DashboardMenuNode" id="bug_overview" _delta="define">
-      <parent>bug_mgmt</parent>
+    <menu xsi:type="DashboardMenuNode" id="Bug:Overview" _delta="define">
+      <parent>Bug:Shortcuts</parent>
       <rank>1</rank>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
@@ -802,33 +994,87 @@
         <cells/>
       </definition>
     </menu>
-    <menu xsi:type="SearchMenuNode" id="bug_list" _delta="define">
-      <parent>bug_mgmt</parent>
+    <menu xsi:type="SearchMenuNode" id="Bug:List" _delta="define">
+      <parent>Bug:Shortcuts</parent>
       <rank>0</rank>
       <class>Bug</class>
     </menu>
+    <menu xsi:type="TemplateMenuNode" id="Bug:Shortcuts" _delta="define">
+      <parent>Bug:Mgmt</parent>
+      <rank>2</rank>
+      <style>
+        <decoration_classes/>
+      </style>
+    </menu>
+    <menu xsi:type="TemplateMenuNode" id="Product:Shortcuts" _delta="define">
+      <parent>Bug:Mgmt</parent>
+      <rank>3</rank>
+      <style>
+        <decoration_classes/>
+      </style>
+    </menu>
+    <menu xsi:type="DashboardMenuNode" id="Product:Overview" _delta="define">
+      <parent>Product:Shortcuts</parent>
+      <rank>0</rank>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells/>
+      </definition>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="Product:List" _delta="define">
+      <parent>Product:Overview</parent>
+      <rank>0</rank>
+      <class>Product</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="Product:New" _delta="define">
+      <parent>Product:Overview</parent>
+      <rank>1</rank>
+      <class>Product</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="Milestone:New" _delta="define">
+      <parent>Product:Overview</parent>
+      <rank>2</rank>
+      <class>Milestone</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="Component:New" _delta="define">
+      <parent>Product:Overview</parent>
+      <rank>3</rank>
+      <class>Component</class>
+    </menu>
   </menus>
   <files>
-    <file id="icons8-bug-48_1806ee5c4b3518c2f68f392c0865042e" xsi:type="File" _delta="define_if_not_exists">
-      <name>icons8-bug-48.png</name>
+    <file id="icons8-anchor-nodes-144_bbe34611b0b651dda48a98a5a71fd67c" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-anchor-nodes-144.png</name>
       <mime_type>image/png</mime_type>
       <width>60</width>
       <height>60</height>
-      <data>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</data>
+      <data>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</data>
     </file>
-    <file id="icons8-application-window-48_9655e84f5992b7d45f4f5888bb6b84d5" xsi:type="File" _delta="define_if_not_exists">
-      <name>icons8-application-window-48.png</name>
+    <file id="icons8-application-window-144_cabf96ef9addbedde6b81e6f20cc423d" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-application-window-144.png</name>
       <mime_type>image/png</mime_type>
       <width>60</width>
       <height>60</height>
-      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAzElEQVRoge3ZoQ3CQBhAYY6AQDIIC6BQCPbAExQjoAiePRAoFAswCBKBOFwd4i6Eo+9/n2qaNu3Ln1yaXso5DyIZtn6BXzOYzmA6g+kMpjOYblR6w/r8/KuP79Nqkkqud8ItXO6P7ng5m348dzwsunOb7bXqWeEmHC44lf4AcNHqmepFaz9/ffM9iu1u46r7wk3YYDqD6QymM5jOYDqD6QymM5jOYDqD6QymM5guXHD1VkvtVkdr4SZcvF3ad+EmbDCdwXQG0xlMZzDdGyV2HrhHhXnhAAAAAElFTkSuQmCC</data>
+      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEqElEQVRoge1aS28bVRT+buLErdOoDm3UyiCKBASpG+iqLLLopl10z6oq+4ofAH+k4hfAhh0/ABUpi64QoqhKVVE1UUsfiJTYHsd2Zuaw8Nzxnfuae+eRSlMfyRrPuefe833nNRPFjIjwLsnS2wZw0rIg3HRZEG66LAg3XRaEmy4tnZJ99+AyiO4CtM2IWgABNPsw/h0AKAYIgi6xEb6bdIyy6/k6ZP2LZ2d1ISPaAXBn+MOtXZmbKcN3AVwzBSTxLlzlj7heXJjiT/XDVD8tANdA9L3uTBOh7YxDHXarTiBNIlj73tOdVXyydRGj0RRPH79AHEYAgOXWEj7e6mFltYUnu88wHo0BAIwB7390AecudLH36DkO/+0rHGQxECZLZrPCci1ICJymEohnCrh+8wts9roYTSKsnF7Fo9+eAACuXP0Un3+5hfE0wnsfnMfOz/cBAL1Lm7jx1TaOI0Lvsw9x76dfMR6M+PlaDpahJWZHuJImU2LGbDrIumxbrJ9bx2AcYjiJ0Nk4ky51N88iGIcYTkKsbqyn2zY2uzg6jjEYh4hWVtBeO5WbAD1hQ2kyhY3KJD/jZnnw+x4Ogyn6wzGe//USPBC7f+7joH+EfjDF/sP91H7v8d94/bqPwdExXu3/g+DNINcH0/09zL79g9IJqZvQyoTEbGKne5BOcOs5km6JMZzpdhCFIUaHQcbX2tkOlpeXEBwMEEcRB492p432WhujNwOE0+PMpB/+eFuJv7FXrQNLtlGM8itBJ3Eco38wSB5j2bXgv2AeuPRMwiQ4wiQYCfPBLlrCly6empdvmonEieZZOfOtPnvT/RZ7EjJOwjpL1nLPE/WyD1fCX9/sKTpKDiUCCPPrzAclHGhux+9FO2T3g98L9oB0nmjn6deZsEJWB0gHXCCgALcFTCIOad8s0/4B8yZsjW5NIEtlVfLrRbiKrBbdV7oahKsT4dpA8vMsIL39WqrBj7AEoNLyNAaM28h+uQ0PmGCX8SvZuRKOi/ZQHVm1+c0pefcMa0HKOhNImYiJnJzlvFbJ+jX389yvO2G5FH1L1gro5FrFg3BFA8WHZNGS1/iFcHXPsAsR36xyIFVm1dLjnoTfDsjSJZ+xcyQc15FVLaAaA6bna5rSNYKsseTlfe6EiYxlNneSF21ZZyCi6MzlmQ2qTFjF4knY0kO+JStkRwHOg1pDNXgQlkHyA+VsycERol20ZG3B8WwVvwyfRFZdiJSoBmfCuintFW1fkDUE1STGd+kqeqiWSe4QMJtYXy1LZ9UDpG9WTUHNE7/HEj+44NCxErFVA8dhCbSr5L5aFgZZtGRdguqZVQ/CHKRcnhzk/H4GUgbOQUp2SjUIdhm//Cy93yJifbX0LVlr6ZXNqsdg8iYcZ5zL0c1GPb/0+Fl5rcJ19lYpK8aS9umh3GqQBozzJJfsqhDrq+W8PIuDrGq6VyWmDIcEalUykX2zWlGvAgh1Su0/xAm0w0nGGtAxCUFIQMbifXKNZXIk2UGwk/eXIwsAO+6ECd8Q0T0iCtOXEJcPpKtuzWFfSQkB/ALCHd2i9hcATZZ37pd4C8JNlwXhpsuCcNNlQbjp8j9Bg0Bg5skpKwAAAABJRU5ErkJggg==</data>
     </file>
-    <file id="icons8-blockly-blue-48_239c2826a0b3e8adc019e607f1b5b48c" xsi:type="File" _delta="define_if_not_exists">
-      <name>icons8-blockly-blue-48.png</name>
+    <file id="icons8-module-144_4975b5c679bd0923c6e8cda9b53bd3d0" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-module-144.png</name>
       <mime_type>image/png</mime_type>
       <width>60</width>
       <height>60</height>
-      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1ElEQVRoge2Zzy4DQRzHv7/tVtPEQQRv4A2cBHsgvIKILQniYAUnR3FyEv/WQZCgJV6BcNiGm0fwBCVuDqrtz4VEiJjZLk1+/X1OO5PJd+aTmczO7hAzo5lwGj2A/0aFpaPC0lFh6aiwdFRYOk0n7CYR4gfRLYDeJLJicpMPvX6ThknNcCNlAaDPtGHTLWkVlo4KS0eFpaPC0jE+Wo4tXnelKu4pgB4QlvI73tHfDetHSszkp+j1rgp3nYBJ2wDjGU5V3S0AQwDawDgcn4umbTurG8ZCYXfg8jgcfOru9KYAHNhGmH88MIY/lRwi7OeCqCP72rqNtG238XCocvnxvLKCGuDN5OaLj8y8aJpBplctfhA1/E4mH3pUb0bTbVoqLB0Vlo6N8OP3Klp+aWnJJjaaX5gIrtu/1uXmi2t+ED2bZpi/hwlXYIy+l2oAz+ZD7wAA/CAyjqmHGrvDAM4BYHUVzv1DtAfA6gBkLFxNVRacSrqdwD0MWiqE3ondcBOAsDU+V3wqZ9J3mfLLBkA52whj4bPNwRKAEdsOEqaLiC8y5TKAeGcQ3bSko8LSUWHpqLB0VDgmNwnlxIPN+zf+pyUFXdLSUWHpqLB0VFg6KiwdFZbOG4babW9hnmSXAAAAAElFTkSuQmCC</data>
+      <data>iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAH80lEQVRoge2bS2xU1xnHf+fMnbE9fs2MjTHGoUAJJeVhWtFFmxYpSqWyQF2gKFVrpFaJumikKCmURgQ2DaAIVWlUIaVS1bKolCiLKGJBpTQhBKpKjZqqSgi2icGx6/dzXvY8753zdWEbbOOxPU+awH81nnvv930/n8c95zvfKBHhfpK+1wGUW/cdsFVuh20nrjcLapMoAOn/9PSu0XL6V+Uaw20nO7aJcBQ4CDTNAjMOXETx+09P7bxRjjhKCtx2sssSMbuAF4BDgGf+2hzwvNLAReCswnx87fTudKliKgnwvt90azvt7Bd4FuQA4F16zxLgecVBLgmcM+K63HnmEVPs2IoKvOdEZ6WC/cAxYL+AB5a3nwUYEGS2xT8Efgtcun56V7JYMRYFuO1kRw2iDgK/YBYYmEfNC3ihPgT+IKIudJzZGS001oKA2052VSLyJPAcsIcls36RgAEMcB0454h548aZPfE8Q84PeO+LXc0oeYLZrrspm4UiAi+0NIziFVBvdpzaOby2iO8oJ+BvHO9sFsVTwNPAVtSiQLIEWHRg5vz2A38WzPnOU3sGV4p7oVYF3n2yW7sk04rwHHAYpOnO00sCWTbAkgHPfzMJvCmKVzWm7/pLbSvO7CsC7z3R2apEHQd+IuC7y3UewNrSeOorEAXpSArjLI0vZ+D5T2HgDRQvd760O2uLZwX+5otdAYG/AfvuDjt3YKUVtVvq8T8SoMJfCUAqnCJ0I0i0N4xk5PZTawde6gWAf4vID7pO7wkuZyPrWjoyOvRUZZ1vq6fKm0YpT7b7VpOrwkXtlnoCOxtw1y42U9lQyYZHW2jcu45Q5xSRz8Nkkk6+rhAxTioU3Bob6PsZ7PndcvdkBbaTycfs5JjPqqiMVvn9M+7KKh857K6sKou6h33UbfPhqVv5/+WudtP0rWb8OwJEesKEboZw4vZaXQGYdDgUnR7oJR0J+xB5DMgNmNnloHZSSd/02KixKiqjXn8Aq8JTxwrg7mo39dv91G/34arKbTPmrvXQuLcJ344AkVshQp+FsGdWWFaLGDsWjUb7ekiFg3XI7bhqsj2ypohERNvJpC8yOmw8Xm+4yufXltu9CLzCV0Hddh/123xoj2tthNmCqrRo2LUO/9caiPSECd8Mkgwl7wxUwTiJmZnp/l4nMTlWh8gcR9ap/47tnCIRdDoeD9iJZNrj9Ya9Ab+2qty+xn3N1G6uLRh0qbRb498RoP6rPqJ9EcY+GsWOJ8LR3m6TmBqvkUwm57klrwSAiHhSsVggGY87jd9+eKaytdqrPa6SZU+0W+NZ7zUxHYuHPvpHjRiz5hZdqsIyHoI1bWdqbnVMGn9DlVnXUoO70ioqeCpum57OKfpuhnHGEzVeU9iOseAUj1IKJyN6YjxOaCpBY5PXadhQo60CW9xOOua/3UHzWceUlUrNQhZjwBQ1p+VkhNGRmDU1kTDrmqtNYL0Xlzs3cDuVMYO3gqa7M6hjMafoObeSJPFsx+jhwWmmJuJm3fpqJ7Ch2lJq5fEmIgzeDDrdHUEdiaRLllwsadYylcrowf6onhyNmaaNNdQ3VqFdelGLZxxjxgeidH0yQThcOtB5reJAyGcmXKpkOqP7eyNUj8VNU0u1U9swuyKZHJp2blyb1JPjCV2u849VgAuHXahY3NZ9PWFdPRIzI4PTZnIiaRlT3qOesrTwIosCMzFbj48l7smpxypOiwv7/6D77mxpFeAv31Hqgy69WA9a+AuvIkxaX6xeUHCXllT+SbdcpdOpwm2sfHn1Lm1/Po6JFR7IatKJOJ6h3oLtFLzSMtNJUv+8hfVQA9amAKoq74zustKpJJ6xAdyjAyg7p0zmsirKWlqcDHbvBM5wCOsrjbg3NUCBiQ+VyeAZG8Az3IdOJ5HsZzM5qajbMUk52N2j2H1TuLeuw9roQ7lzy1Mox8Y9OULFYE9RxuxSlWTzIGmH9I0RnMEQ7s0NWC0+0KvYMQbP5Aie4V5c8Zmcfa5VKwEnC30Pm5kUqY5h7P7gbIs31d4Nbgzu0AQVQz24YtHZ7VTh7/+sB+YrAV8FDhTqGeYmtk8Gsf1e3Fsacfm9KMfBNR2kYqgXK7rsuVchuprtQlZgUfxJCT8C9hYrikwoTiYygK5wUzNwbXaMFr+K6GMRzme7mHUqHXj94KQgjwOvAcVrAiOYhI1OJUCKWpUUBl5TyOPhq89PZrtpTSUPD7Vf3IHo48ATKLzzY0wWjbU7n+98rxZ8rRas2xTJof8s++zyf5PltaQAksDbCl4OXvnl9dVY1vSyHHj94A0R/TSKR4G35pwUSXlPUEngAvA9RP10LbCQRxXPxh//VWutvwscE9QBbs8DZWthB7gkcBbRfw9ffT6ncZF3nVZr+zseBd8XOAF8J3/grF11keaA/wWcEXg3fOVIXr2s4Eq8pievaI87+UNQJ5id0a0iAxvgGqLOiNJvhz7IrUXvslysWsvW9ndqQB0CXhDU1+fMF9qlu4GzotVbofePFFx2CCWopm1tf7dO4DBwDNTmPFu4H3hFFH8JXT4aLmZ8JauXbm1/LyDwDIqfA5vWCDwInEepc8HLR7O+SwtRySviW9rfa1GKZ0E9I1A353Yp8AzwR4RXg1d+teYywnxUtp8AtB6+1GLgOHAIVNMc8DhwAe06G3z/SH854igb8LxaDl9qAbVpFlj6gx/8OueK2EJUduB7rQdnS192/Q/Mv5vLAAMMpwAAAABJRU5ErkJggg==</data>
+    </file>
+    <file id="icons8-website-bug-144_c74d6482698346d5ecf39eb28b5c52c0" xsi:type="File" _delta="define_if_not_exists">
+      <name>icons8-website-bug-144.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>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</data>
     </file>
   </files>
   <user_rights>

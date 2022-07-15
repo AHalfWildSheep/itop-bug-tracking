@@ -26,8 +26,6 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.itop-bug-tracking.php',
-			'src/IndexUtils.php',
-			'src/DuplicateFinder.php'
 		),
 		'webservice' => array(
 			
@@ -55,25 +53,5 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('BugTrackerIndexer'))
-{
-	class BugTrackerIndexer extends ModuleInstallerAPI
-	{
-		/**
-		 * @inherit
-		 **/
-		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
-		{
-			$sTable = 'bug';
-			$aDuplicateParams = $oConfiguration->GetModuleSetting('itop-bug-tracking', 'duplicate_params');
-			$aColumns = array();
-			foreach ($aDuplicateParams as $sColumn => $sParams)
-			{
-				$aColumns[] = $sColumn;
-			}
-			IndexUtils::CreateIndexes($sTable, $aColumns);
-		}
-	}
-}
 
 ?>
