@@ -1,0 +1,1602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <branding>
+    <themes_common>
+      <stylesheets>
+        <stylesheet id="bug-tracking-style" _delta="define">ahws-bug-tracking/assets/css/style.scss</stylesheet>
+      </stylesheets>
+    </themes_common>
+  </branding>
+  <classes>
+    <class id="AHWSIssue" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>issue</db_table>
+        <reconciliation>
+          <attributes>
+            <attribute id="reference"/>
+          </attributes>
+        </reconciliation>
+        <naming>
+          <attributes>
+            <attribute id="reference"/> <attribute id="summary"/>
+          </attributes>
+        </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>assets/images/icons8-issue-bug-96.png</icon>
+          <main_color>$ibo-color-blue-700</main_color>
+        </style>
+      </properties>
+      <fields>
+        <field id="summary" xsi:type="AttributeString">
+          <sql>summary</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="reference" xsi:type="AttributeString">
+          <sql>reference</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="unconfirmed">
+              <code>unconfirmed</code>
+              <style>
+                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-question</decoration_classes>
+              </style>
+            </value>
+            <value id="confirmed">
+              <code>confirmed</code>
+              <style>
+                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-check</decoration_classes>
+              </style>
+            </value>
+            <value id="inprogress">
+              <code>inprogress</code>
+              <style>
+                <main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-play</decoration_classes>
+              </style>
+            </value>
+            <value id="resolved">
+              <code>resolved</code>
+              <style>
+                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                <decoration_classes>fas fa-check-double</decoration_classes>
+              </style>
+            </value>
+            <value id="closed">
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+              </style>
+              <code>closed</code>
+            </value>
+          </values>
+          <default_style>
+            <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+            <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+            <decoration_classes>fas fa-question</decoration_classes>
+          </default_style>
+          <default_value>unconfirmed</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies>
+            <attribute id="reference"/>
+          </dependencies>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
+          <sql>type</sql>
+          <values>
+            <value id="bug">
+              <style>
+                <main_color>$ibo-color-red-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes>fas fa-bug</decoration_classes>
+              </style>
+              <code>bug</code>
+            </value>
+            <value id="enhancement">
+              <style>
+                <main_color>$ibo-color-green-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes>fas fa-star</decoration_classes>
+              </style>
+              <code>enhancement</code>
+            </value>
+            <value id="task">
+              <style>
+                <main_color>$ibo-color-cyan-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes>fas fa-check</decoration_classes>
+              </style>
+              <code>task</code>
+            </value>
+          </values>
+          <default_value>bug</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter>SELECT AHWSProduct WHERE status = 'active'</filter>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>AHWSProduct</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="component_id" xsi:type="AttributeExternalKey">
+          <sql>component_id</sql>
+          <filter>SELECT AHWSComponent WHERE product_id = :this-&gt;product_id</filter>
+          <dependencies>
+            <attribute id="product_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>AHWSComponent</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="version" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>LnkAHWSIssueToAHWSProductVersion</linked_class>
+          <ext_key_to_me>issue_id</ext_key_to_me>
+          <ext_key_to_remote>productversion_id</ext_key_to_remote>
+          <tracking_level>list</tracking_level>
+          <display_style>property</display_style>
+          <filter>SELECT AHWSProductVersion AS V WHERE V.product_id = :this->product_id AND V.status = 'active'</filter>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="p1">
+              <code>p1</code>
+              <rank>10</rank>
+              <style>
+                <main_color>$ibo-color-cyan-200</main_color>
+                <complementary_color>$ibo-color-cyan-950</complementary_color>
+              </style>
+            </value>
+            <value id="p2">
+              <code>p2</code>
+              <rank>20</rank>
+              <style>
+                <main_color>$ibo-color-blue-200</main_color>
+                <complementary_color>$ibo-color-blue-950</complementary_color>
+              </style>
+            </value>
+            <value id="p3">
+              <code>p3</code>
+              <rank>30</rank>
+              <style>
+                <main_color>$ibo-color-blue-100</main_color>
+                <complementary_color>$ibo-color-blue-950</complementary_color>
+              </style>
+            </value>
+            <value id="p4">
+              <code>p4</code>
+              <rank>40</rank>
+              <style>
+                <main_color>$ibo-color-green-100</main_color>
+                <complementary_color>$ibo-color-green-950</complementary_color>
+              </style>
+            </value>
+          </values>
+          <default_value>p4</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="severity" xsi:type="AttributeEnum">
+          <sql>severity</sql>
+          <values>
+            <value id="s1">
+              <code>s1</code>
+              <style>
+                <main_color>$ibo-color-red-200</main_color>
+                <complementary_color>$ibo-color-red-900</complementary_color>
+              </style>
+            </value>
+            <value id="s2">
+              <code>s2</code>
+              <style>
+                <main_color>$ibo-color-orange-200</main_color>
+                <complementary_color>$ibo-color-orange-900</complementary_color>
+              </style>
+            </value>
+            <value id="s3">
+              <code>s3</code>
+              <style>
+                <main_color>$ibo-color-yellow-200</main_color>
+                <complementary_color>$ibo-color-yellow-950</complementary_color>
+              </style>
+            </value>
+            <value id="s4">
+              <code>s4</code>
+              <style>
+                <main_color>$ibo-color-yellow-100</main_color>
+                <complementary_color>$ibo-color-yellow-950</complementary_color>
+              </style>
+            </value>
+          </values>
+          <default_value>s4</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="team_id" xsi:type="AttributeExternalKey">
+          <sql>team_id</sql>
+          <filter>SELECT Team WHERE status='active'</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Team</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="assignee_id" xsi:type="AttributeExternalKey">
+          <sql>assignee_id</sql>
+          <filter>SELECT Person AS p JOIN lnkPersonToTeam AS l ON l.person_id=p.id JOIN Team AS t ON l.team_id=t.id WHERE t.id = :this-&gt;team_id</filter>
+          <dependencies>
+            <attribute id="team_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="parent_issue_id" xsi:type="AttributeHierarchicalKey">
+          <sql>parent_issue_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="reporter_id" xsi:type="AttributeExternalKey">
+          <sql>reporter_id</sql>
+          <filter>SELECT Person WHERE status='active'</filter>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="issue_log" xsi:type="AttributeCaseLog">
+          <sql>issue_log</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="creation_date" xsi:type="AttributeDateTime">
+          <sql>creation_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="update_date" xsi:type="AttributeDateTime">
+          <sql>update_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="resolution_date" xsi:type="AttributeDateTime">
+          <sql>resolution_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="resolution_code" xsi:type="AttributeEnum">
+          <sql>resolution_code</sql>
+          <values>
+            <value id="fixed">
+              <code>fixed</code>
+            </value>
+            <value id="duplicate">
+              <code>duplicate</code>
+            </value>
+            <value id="wontfix">
+              <code>wontfix</code>
+            </value>
+            <value id="notreproduced">
+              <code>notreproduced</code>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="keywords" xsi:type="AttributeTagSet">
+          <sql>keywords</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <max_items/>
+          <tag_code_max_len/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="milestone_id" xsi:type="AttributeExternalKey">
+          <sql>milestone_id</sql>
+          <filter>SELECT AHWSMilestone WHERE product_id = :this-&gt;product_id</filter>
+          <dependencies>
+            <attribute id="product_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>AHWSMilestone</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods>
+        <method id="DBInsertNoReload">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[    public function DBInsertNoReload()
+    {
+          $iNextId = ItopCounter::IncClass(get_class($this));
+          $sRef = $this->MakeIssueReference($iNextId);
+          $this->SetIfNull('reference', $sRef);
+          $iKey = parent::DBInsertNoReload();
+          return $iKey;
+    }]]></code>
+        </method>
+        <method id="MakeIssueReference">
+          <static>true</static>
+          <access>public </access>
+          <code><![CDATA[        public static function MakeIssueReference($iNextId)
+        {
+            return sprintf(static::GetIssueReferenceFormat(), $iNextId);
+        }]]></code>
+        </method>
+        <method id="GetIssueReferenceFormat">
+          <static>true</static>
+          <access>public </access>
+          <code><![CDATA[	public static function GetIssueReferenceFormat()
+	{
+		return 'ISSUE-%05d';
+	}]]></code>
+        </method>
+        <method id="OnInsert">
+          <static>false</static>
+          <access>protected </access>
+          <code><![CDATA[    protected function OnInsert()
+	{
+        parent::OnInsert();
+        $currentDate = time();
+        $this->SetIfNull('update_date', $currentDate);
+        $this->SetIfNull('creation_date', $currentDate);
+	}]]></code>
+        </method>
+        <method id="OnUpdate">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function OnUpdate()
+	{
+		$this->Set('update_date', time());
+	}]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+        parent::DoCheckToWrite();
+        
+        // Can't have itself as parent
+        if (!$this->IsNew() && ($this->Get('parent_issue_id') == $this->GetKey()))
+        {
+          $this->m_aCheckIssues[] = Dict::Format('Class:AHWSIssue/Error:CannotAssignParentIssueIdToSelf');
+        }	
+	}]]></code>
+        </method>
+        <method id="PrefillCreationForm">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function PrefillCreationForm(&$value)
+	{
+	    $sDescriptionContent = Dict::S('Class:AHWSIssue/Attribute:description:Default');
+	    $this->Set('description', $sDescriptionContent);
+	    return true;
+	}]]></code>
+          <arguments>
+            <argument id="1">
+              <mandatory>false</mandatory>
+              <type>reference</type>
+            </argument>
+          </arguments>
+        </method>
+        <method id="PrefillTransitionForm">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function PrefillTransitionForm(&$value)
+	{
+        if ($value['stimulus'] == 'ev_resolve') {
+        			$oDateFormat = AttributeDateTime::GetFormat();
+			        $oDateTime = new DateTime('now');
+              $this->Set('resolution_date', $oDateTime->format($oDateFormat));
+        }
+	    return true;
+	}]]></code>
+          <arguments>
+            <argument id="1">
+              <mandatory>false</mandatory>
+              <type>reference</type>
+            </argument>
+          </arguments>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[    public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())	{
+		if ($sAttCode == 'update_date' || $sAttCode == 'creation_date' || $sAttCode == 'resolution_date' || $sAttCode == 'resolution_code')
+		{
+		    return OPT_ATT_HIDDEN;
+		}
+		
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <list>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="product_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="reference">
+              <rank>20</rank>
+            </item>
+            <item id="product_id">
+              <rank>30</rank>
+            </item>
+            <item id="assignee_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:IssueDetails">
+                  <items>
+                    <item id="summary">
+                      <rank>10</rank>
+                    </item>
+                    <item id="type">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                    <item id="keywords">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:IssueProductDetails">
+                  <items>
+                    <item id="product_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="component_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="version">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:IssueTracking">
+                  <items>
+                    <item id="status">
+                      <rank>10</rank>
+                    </item>
+                    <item id="severity">
+                      <rank>20</rank>
+                    </item>
+                    <item id="priority">
+                      <rank>30</rank>
+                    </item>
+                    <item id="milestone_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="parent_issue_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="resolution_code">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:IssuePeople">
+                  <items>
+                    <item id="reporter_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="team_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="assignee_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+                <item id="fieldset:IssueHistory">
+                  <items>
+                    <item id="creation_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="update_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="resolution_date">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>30</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="summary">
+              <rank>10</rank>
+            </item>
+            <item id="assignee_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <lifecycle>
+        <stimuli>
+          <stimulus id="ev_confirm" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_start_working" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_stop_working" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_unconfirm" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
+          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+        </stimuli>
+        <states>
+          <state id="confirmed">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="ev_unconfirm">
+                <stimulus>ev_unconfirm</stimulus>
+                <target>unconfirmed</target>
+                <actions/>
+              </transition>
+              <transition id="ev_start_working">
+                <stimulus>ev_start_working</stimulus>
+                <target>inprogress</target>
+                <actions/>
+              </transition>
+              <transition id="ev_resolve">
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="inprogress">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="ev_stop_working">
+                <stimulus>ev_stop_working</stimulus>
+                <target>confirmed</target>
+                <actions/>
+              </transition>
+              <transition id="ev_resolve">
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="resolved">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <must_prompt/>
+              </attribute>
+              <attribute id="resolution_date">
+                <must_prompt/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="ev_reopen">
+                <stimulus>ev_reopen</stimulus>
+                <target>confirmed</target>
+                <actions/>
+              </transition>
+              <transition id="ev_close">
+                <stimulus>ev_close</stimulus>
+                <target>closed</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="unconfirmed">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="team_id">
+                <must_prompt/>
+              </attribute>
+              <attribute id="assignee_id">
+                <must_prompt/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+              <attribute id="resolution_code">
+                <hidden/>
+              </attribute>
+              <attribute id="resolution_date">
+                <hidden/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="ev_confirm">
+                <stimulus>ev_confirm</stimulus>
+                <target>confirmed</target>
+                <actions/>
+              </transition>
+              <transition id="ev_resolve">
+                <stimulus>ev_resolve</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+          <state id="closed">
+            <flags>
+              <attribute id="reference">
+                <read_only/>
+              </attribute>
+              <attribute id="update_date">
+                <read_only/>
+              </attribute>
+              <attribute id="creation_date">
+                <read_only/>
+              </attribute>
+            </flags>
+            <transitions>
+              <transition id="ev_reopen">
+                <stimulus>ev_reopen</stimulus>
+                <target>resolved</target>
+                <actions/>
+              </transition>
+            </transitions>
+          </state>
+        </states>
+      </lifecycle>
+    </class>
+    <class id="AHWSProduct" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>product</db_table>
+        <style>
+          <icon>assets/images/icons8-application-window-96.png</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="components_list" xsi:type="AttributeLinkedSet">
+          <linked_class>AHWSComponent</linked_class>
+          <ext_key_to_me>product_id</ext_key_to_me>
+        </field>
+        <field id="versions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>AHWSProductVersion</linked_class>
+          <ext_key_to_me>product_id</ext_key_to_me>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="name">
+                  <rank>10</rank>
+                </item>
+                <item id="status">
+                  <rank>20</rank>
+                </item>
+                <item id="description">
+                  <rank>30</rank>
+                </item>
+                <item id="components_list">
+                  <rank>40</rank>
+                </item>
+                <item id="versions_list">
+                  <rank>50</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="AHWSProductVersion" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>product_version</db_table>
+        <style>
+          <icon>assets/images/icons8-number-96.png</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+          </values>
+          <default_value>active</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>AHWSProduct</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="release_date" xsi:type="AttributeDateTime">
+          <sql>release_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="product_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="product_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="product_id">
+              <rank>30</rank>
+            </item>
+            <item id="release_date">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <methods></methods>
+    </class>
+    <class id="LnkAHWSIssueToAHWSProductVersion" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkissuetoproductversion</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+      </properties>
+      <fields>
+        <field id="issue_id" xsi:type="AttributeExternalKey">
+          <sql>issue_id</sql>
+          <target_class>AHWSIssue</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="productversion_id" xsi:type="AttributeExternalKey">
+          <sql>productversion_id</sql>
+          <target_class>AHWSProductVersion</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <presentation>
+        <list>
+          <items>
+            <item id="productversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="issue_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="productversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="issue_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="productversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="issue_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="productversion_id">
+              <rank>10</rank>
+            </item>
+            <item id="issue_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <methods></methods>
+    </class>
+    <class id="AHWSComponent" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>component</db_table>
+        <style>
+          <icon>assets/images/icons8-module-96.png</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="product_name"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>AHWSProduct</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="product_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>product_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+          <width/>
+          <height/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="name">
+                  <rank>10</rank>
+                </item>
+                <item id="product_id">
+                  <rank>20</rank>
+                </item>
+                <item id="description">
+                  <rank>30</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="AHWSMilestone" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>milestone</db_table>
+        <style>
+          <icon>assets/images/icons8-programming-flag-96.png</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="product_id" xsi:type="AttributeExternalKey">
+          <sql>product_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>AHWSProduct</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="description" xsi:type="AttributeHTML">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="start_date" xsi:type="AttributeDate">
+          <sql>start_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="due_date" xsi:type="AttributeDate">
+          <sql>due_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="issues_list" xsi:type="AttributeLinkedSet">
+          <linked_class>AHWSIssues</linked_class>
+          <ext_key_to_me>milestone_id</ext_key_to_me>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="product_id">
+              <rank>20</rank>
+            </item>
+            <item id="start_date">
+              <rank>30</rank>
+            </item>
+            <item id="due_date">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="product_id">
+                  <rank>10</rank>
+                </item>
+                <item id="name">
+                  <rank>20</rank>
+                </item>
+                <item id="description">
+                  <rank>30</rank>
+                </item>
+                <item id="start_date">
+                  <rank>40</rank>
+                </item>
+                <item id="due_date">
+                  <rank>50</rank>
+                </item>
+                <item id="issues_list">
+                  <rank>60</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="product_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu xsi:type="MenuGroup" id="AHWSIssue:Mgmt" _delta="define">
+      <rank>66</rank>
+      <enable_class>AHWSIssue</enable_class>
+      <enable_action>UR_ACTION_READ</enable_action>
+      <style>
+        <decoration_classes>fas fa-bug</decoration_classes>
+      </style>
+    </menu>
+    <menu xsi:type="DashboardMenuNode" id="AHWSIssue:Overview" _delta="define">
+      <parent>AHWSIssue:Shortcuts</parent>
+      <rank>0</rank>
+      <definition>
+        <layout>DashboardLayoutTwoCols</layout>
+        <title>Menu:AHWSIssue:Overview</title>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row0_col0_1" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSIssue:Overview:MyActiveIssues</title>
+                <query>SELECT AHWSIssue WHERE assignee_id = :current_contact_id AND status IN ("unconfirmed", "confirmed", "inprogress")</query>
+                <menu>true</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row0_col1_2" xsi:type="DashletGroupByPie">
+                <rank>0</rank>
+                <title>AHWSIssue:Overview:IssuesByStatus</title>
+                <query>SELECT AHWSIssue</query>
+                <group_by>status</group_by>
+                <style>pie</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute></aggregation_attribute>
+                <limit></limit>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row1_col0_5" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSIssue:Overview:OpenedIssuesForActiveMilestone</title>
+                <query>SELECT AHWSIssue JOIN AHWSMilestone ON AHWSIssue.milestone_id = AHWSMilestone.id WHERE AHWSIssue.status IN ("unconfirmed", "confirmed", "inprogress") AND AHWSMilestone.start_date &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d') AND AHWSMilestone.due_date &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d')</query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="3">
+            <rank>3</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row1_col1_3" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>AHWSIssue:Overview:OpenedIssuesByProduct</title>
+                <query>SELECT AHWSIssue JOIN AHWSProduct ON AHWSIssue.product_id = AHWSProduct.id WHERE AHWSIssue.status IN ("unconfirmed", "confirmed", "inprogress") AND AHWSProduct.status = "active"</query>
+                <group_by>product_id</group_by>
+                <style>table</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute></aggregation_attribute>
+                <limit></limit>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="4">
+            <rank>4</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row1_col0_4" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSIssue:Overview:IssuesRecentlyUpdated</title>
+                <query>SELECT AHWSIssue WHERE update_date &gt;= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 DAY),'%Y-%m-%d 00:00:00')</query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="5">
+            <rank>5</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="AHWSIssue:List" _delta="define">
+      <parent>AHWSIssue:Overview</parent>
+      <rank>0</rank>
+      <class>AHWSIssue</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="AHWSIssue:New" _delta="define">
+      <parent>AHWSIssue:Overview</parent>
+      <rank>1</rank>
+      <class>AHWSIssue</class>
+      <enable_class>AHWSIssue</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_admin_only>0</enable_admin_only>
+    </menu>
+    <menu xsi:type="TemplateMenuNode" id="AHWSIssue:Shortcuts" _delta="define">
+      <parent>AHWSIssue:Mgmt</parent>
+      <rank>2</rank>
+      <style>
+        <decoration_classes/>
+      </style>
+    </menu>
+    <menu xsi:type="TemplateMenuNode" id="AHWSProduct:Shortcuts" _delta="define">
+      <parent>AHWSIssue:Mgmt</parent>
+      <rank>3</rank>
+      <style>
+        <decoration_classes/>
+      </style>
+    </menu>
+    <menu xsi:type="DashboardMenuNode" id="AHWSProduct:Overview" _delta="define">
+      <parent>AHWSProduct:Shortcuts</parent>
+      <rank>0</rank>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:AHWSProduct:Overview</title>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row0_col0_1" xsi:type="DashletHeaderDynamic">
+                <rank>0</rank>
+                <title>AHWSProduct:Overview:AllProducts</title>
+                <icon>ahws-bug-tracking/assets/images/icons8-application-window-96.png</icon>
+                <subtitle>AHWSProduct:Overview:AllProductsByStatus</subtitle>
+                <query>SELECT AHWSProduct</query>
+                <group_by>status</group_by>
+                <values>active,inactive</values>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row1_col0_2" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSProduct:Overview:AllProductInActiveMilestone</title>
+                <query>SELECT AHWSProduct JOIN AHWSIssue ON AHWSIssue.product_id = AHWSProduct.id JOIN AHWSMilestone ON AHWSIssue.milestone_id = AHWSMilestone.id WHERE AHWSProduct.status = "active" AND AHWSIssue.status IN ("unconfirmed", "confirmed", "inprogress") AND AHWSMilestone.start_date &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d') AND AHWSMilestone.due_date &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d')</query>
+                <menu>true</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row2_col0_3" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSProduct:Overview:InactiveProductWithOpenedIssue</title>
+                <query>SELECT AHWSProduct JOIN AHWSIssue ON AHWSIssue.product_id = AHWSProduct.id WHERE AHWSProduct.status = "inactive" AND AHWSIssue.status IN ("unconfirmed", "confirmed", "inprogress") </query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="3">
+            <rank>3</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="AHWSProduct:List" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>0</rank>
+      <class>AHWSProduct</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="AHWSProduct:New" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>1</rank>
+      <class>AHWSProduct</class>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="AHWSComponent:List" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>2</rank>
+      <class>AHWSComponent</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="AHWSComponent:New" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>3</rank>
+      <class>AHWSComponent</class>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="AHWSProductVersion:List" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>4</rank>
+      <class>AHWSProductVersion</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="AHWSProductVersion:New" _delta="define">
+      <parent>AHWSProduct:Overview</parent>
+      <rank>5</rank>
+      <class>AHWSProductVersion</class>
+    </menu>
+    <menu xsi:type="DashboardMenuNode" id="AHWSMilestone:Overview" _delta="define">
+      <parent>AHWSProduct:Shortcuts</parent>
+      <rank>6</rank>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:AHWSMilestone:Overview</title>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row0_col0_1" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSMilestone:Overview:ActiveMilestone</title>
+                <query>SELECT AHWSMilestone WHERE start_date &lt;= DATE_FORMAT(NOW(),'%Y-%m-%d') AND due_date &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d')</query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="CUSTOM__ID_row1_col0_2" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>AHWSMilestone:Overview:InactiveMilestoneWithOpenedIssues</title>
+                <query>SELECT AHWSMilestone JOIN AHWSIssue ON AHWSIssue.milestone_id = AHWSMilestone.id WHERE AHWSMilestone.start_date &gt; DATE_FORMAT(NOW(),'%Y-%m-%d') AND AHWSMilestone.due_date &lt; DATE_FORMAT(NOW(),'%Y-%m-%d') AND AHWSIssue.status IN ("unconfirmed", "confirmed", "inprogress")</query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu xsi:type="SearchMenuNode" id="AHWSMilestone:List" _delta="define">
+      <parent>AHWSMilestone:Overview</parent>
+      <rank>0</rank>
+      <class>AHWSMilestone</class>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="AHWSMilestone:New" _delta="define">
+      <parent>AHWSMilestone:Overview</parent>
+      <rank>1</rank>
+      <class>AHWSMilestone</class>
+    </menu>
+  </menus>
+  <user_rights>
+    <profiles>
+      <profile id="201" _delta="define">
+        <name>Issue Manager</name>
+        <description>User can read, track and resolve Issue objects</description>
+        <groups>
+          <group id="AHWSIssue">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
+              <action id="stimulus:ev_close">allow</action>
+              <action id="stimulus:ev_confirm">allow</action>
+              <action id="stimulus:ev_reopen">allow</action>
+              <action id="stimulus:ev_resolve">allow</action>
+              <action id="stimulus:ev_start_working">allow</action>
+              <action id="stimulus:ev_stop_working">allow</action>
+              <action id="stimulus:ev_unconfirm">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
+    <groups>
+      <group id="AHWSIssue" _delta="define">
+        <classes>
+          <class id="AHWSProduct"/>
+          <class id="AHWSComponent"/>
+          <class id="AHWSIssue"/>
+        </classes>
+      </group>
+    </groups>
+  </user_rights>
+</itop_design>
