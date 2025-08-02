@@ -56,6 +56,10 @@ The core class representing individual issues, bugs, enhancements, or tasks.
 | resolution_date | DateTime | No | When the issue was resolved |
 | resolution_code | Enum | No | Reason for resolution (fixed, duplicate, wontfix, notreproduced)|
 
+### Lifecycle
+AHWSIssue's default lifecycle is defined as follows:
+
+![Lifecycle Diagram](AHWSIssueLifecycle.svg)
 
 ### AHWSProduct
 
