@@ -13,7 +13,7 @@
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>issue</db_table>
+        <db_table>ahwsissue</db_table>
         <reconciliation>
           <attributes>
             <attribute id="reference"/>
@@ -779,7 +779,7 @@
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>product</db_table>
+        <db_table>ahwsproduct</db_table>
         <style>
           <icon>assets/images/icons8-application-window-96.png</icon>
         </style>
@@ -898,7 +898,7 @@
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>product_version</db_table>
+        <db_table>ahwsproduct_version</db_table>
         <style>
           <icon>assets/images/icons8-number-96.png</icon>
         </style>
@@ -1018,7 +1018,7 @@
         <category>bizmodel</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>lnkissuetoproductversion</db_table>
+        <db_table>lnkahwsissuetoahwsproductversion</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
       </properties>
@@ -1084,7 +1084,7 @@
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>component</db_table>
+        <db_table>ahwscomponent</db_table>
         <style>
           <icon>assets/images/icons8-module-96.png</icon>
         </style>
@@ -1181,7 +1181,7 @@
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>milestone</db_table>
+        <db_table>ahwsmilestone</db_table>
         <style>
           <icon>assets/images/icons8-programming-flag-96.png</icon>
         </style>
